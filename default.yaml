@@ -1,0 +1,58 @@
+hydra:
+  run:
+    dir: .
+  job:
+    chdir: false
+description: "Belief Mix w/ EDL-CE Loss"
+experiment: ""
+dataset:
+  name: "mr"
+  num_cls: 2
+  mode: "original"  #original / long-tail / step
+  ir: 1
+  sr: 1.0
+model:
+  name: "bert-large-uncased"
+  dropout: 0.1
+train:
+  batch_size: 32
+  epochs: 10
+  max_length: 256
+  base_lr: 2e-05
+  weight_decay: 1e-05
+  warmup_ratio: 0.1
+  warmup_ratio2: 0.03
+  mix_lr_scale: 0.3
+  min_lr_scale: 0.1
+  cuda: True
+  seeds: [42, 123, 2024, 2025, 3407]
+  seed: 46
+  finetune: True  
+  eval_interval: 20
+  patience: 30
+  uncertainty: False
+  curriculum: False
+  u_thresh: 0.5
+  conflict_band: 0.10
+  top_k_candidate: 2
+  switch_epoch: 1
+  freeze: 0
+  distributed: False
+mix:
+  method: "none"      # none, mixup, remix, mix-belief
+  alpha: 1.0
+  k_majority: 3
+  tau: 0.5
+  keep_org: false
+loss:
+  type: "FL"          # CE, FL, LDAM
+  fl_beta: 0.999
+  fl_gamma: 2
+  kl_weight: false
+  annealing_step: 20
+  mu_prior: 1.0
+eda:
+    inc_factor: 0
+output:
+  model_dir: "models_save/"
+  result_dir: "results/"
